@@ -1,0 +1,58 @@
+
+import { type IUser } from "./user.dto";
+import UserSchema from "./user.schema";
+import bcrypt from "bcrypt"
+import jwt from "jsonwebtoken"
+export const createUser = async (data: IUser) => {
+
+    const result = await UserSchema.create({ ...data, active: true });
+    return result;
+};
+
+export const comparePasswords = async (plainPassword: string, hashedPassword: string) => {
+    return await bcrypt.compare(plainPassword, hashedPassword);
+};
+
+export const generateAuthToken = (userId: string, role: string) => {
+    const token = jwt.sign({ id: userId, role: role }, process.env.JWT_SECRET!, { expiresIn: '1h' });
+    return token;
+};
+
+
+
+export const findUserByEmail = async(email: string) => {
+    const result = await UserSchema.findOne({email})
+    return result
+}
+
+export const updateUser = async (id: string, data: IUser) => {
+    const result = await UserSchema.findOneAndUpdate({ _id: id }, data, {
+        new: true,
+    });
+    return result;
+};
+
+export const editUser = async (id: string, data: Partial<IUser>) => {
+    const result = await UserSchema.findOneAndUpdate({ _id: id }, data);
+    return result;
+};
+
+export const deleteUser = async (id: string) => {
+    const result = await UserSchema.deleteOne({ _id: id });
+    return result;
+};
+
+export const getUserById = async (id: string) => {
+    const result = await UserSchema.findById(id).lean();
+    return result;
+};
+
+export const getAllUser = async () => {
+    const result = await UserSchema.find({}).lean();
+    return result;
+};
+export const getUserByEmail = async (email: string) => {
+    const result = await UserSchema.findOne({ email }).lean();
+    return result;
+}
+
