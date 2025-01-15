@@ -1,0 +1,273 @@
+{
+
+
+      "/users": {
+        "get": {
+          "summary": "Get all users",
+          "description": "Fetch a list of all users in the system",
+          "responses": {
+            "200": {
+              "description": "List of users",
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/User"
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        },
+        "post": {
+          "summary": "Create a new user",
+          "description": "Create a new user in the system",
+          "parameters": [
+            {
+              "in": "body",
+              "name": "user",
+              "description": "User object to create",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/User"
+              }
+            }
+          ],
+          "responses": {
+            "201": {
+              "description": "User successfully created",
+              "schema": {
+                "$ref": "#/definitions/User"
+              }
+            },
+            "400": {
+              "description": "Invalid input"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/users/{id}": {
+        "get": {
+          "summary": "Get a user by ID",
+          "description": "Fetch a user by their ID",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "required": true,
+              "type": "string",
+              "description": "User ID"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "User found",
+              "schema": {
+                "$ref": "#/definitions/User"
+              }
+            },
+            "404": {
+              "description": "User not found"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        },
+        "put": {
+          "summary": "Update a user by ID",
+          "description": "Update the details of an existing user",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "required": true,
+              "type": "string",
+              "description": "User ID"
+            },
+            {
+              "in": "body",
+              "name": "user",
+              "description": "User object with updated details",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/User"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "User successfully updated",
+              "schema": {
+                "$ref": "#/definitions/User"
+              }
+            },
+            "400": {
+              "description": "Invalid input"
+            },
+            "404": {
+              "description": "User not found"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        },
+        "patch": {
+          "summary": "Edit a user by ID",
+          "description": "Partially update the details of an existing user",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "required": true,
+              "type": "string",
+              "description": "User ID"
+            },
+            {
+              "in": "body",
+              "name": "user",
+              "description": "User object with partial updates",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/User"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "User successfully edited",
+              "schema": {
+                "$ref": "#/definitions/User"
+              }
+            },
+            "400": {
+              "description": "Invalid input"
+            },
+            "404": {
+              "description": "User not found"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        },
+        "delete": {
+          "summary": "Delete a user by ID",
+          "description": "Delete a user from the system by their ID",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "required": true,
+              "type": "string",
+              "description": "User ID"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "User successfully deleted"
+            },
+            "404": {
+              "description": "User not found"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/users/login": {
+        "post": {
+          "summary": "Login user",
+          "description": "Authenticate and log in a user",
+          "parameters": [
+            {
+              "in": "body",
+              "name": "user",
+              "description": "Login credentials",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/LoginCredentials"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "User successfully logged in",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "token": {
+                    "type": "string",
+                    "description": "Authentication token"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid credentials"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      }
+    ,
+    "definitions": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "12345"
+          },
+          "firstName": {
+            "type": "string",
+            "example": "John"
+          },
+          "lastName": {
+            "type": "string",
+            "example": "Doe"
+          },
+          "email": {
+            "type": "string",
+            "example": "john.doe@example.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "password123"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2023-01-01T12:00:00Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2023-01-02T12:00:00Z"
+          }
+        }
+      },
+      "LoginCredentials": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "john.doe@example.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "password123"
+          }
+        }
+      }
+    }
+  }
+  

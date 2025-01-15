@@ -3,18 +3,36 @@ import { type IUser } from "./user.dto";
 import UserSchema from "./user.schema";
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
+/**
+ * Creates a new user in the database.
+ * @param data - The user data to create with
+ * @returns The newly created user
+ */
 export const createUser = async (data: IUser) => {
 
     const result = await UserSchema.create({ ...data, active: true });
     return result;
 };
 
+/**
+ * Compares a plain password with a hashed password to check for a match.
+ * @param plainPassword - The plain text password to compare
+ * @param hashedPassword - The hashed password to compare against
+ * @returns A promise that resolves to true if the passwords match, otherwise false
+ */
+
+/**
+ * Compares a plain password with a hashed password to check for a match.
+ * @param plainPassword - The plain text password to compare
+ * @param hashedPassword - The hashed password to compare against
+ * @returns A promise that resolves to true if the passwords match, otherwise false
+ */
 export const comparePasswords = async (plainPassword: string, hashedPassword: string) => {
     return await bcrypt.compare(plainPassword, hashedPassword);
 };
 
 export const generateAuthToken = (userId: string, role: string) => {
-    const token = jwt.sign({ id: userId, role: role }, process.env.JWT_SECRET!, { expiresIn: '1h' });
+    const token = jwt.sign({ _id: userId, role: role }, process.env.JWT_SECRET!, { expiresIn: '1h' });
     return token;
 };
 

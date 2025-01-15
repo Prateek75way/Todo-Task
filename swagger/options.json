@@ -1,0 +1,418 @@
+{
+    "swagger": "2.0",
+    "info": {
+      "title": "My API",
+      "description": "API documentation for my Node.js project",
+      "version": "1.0.0"
+    },
+    "basePath": "/api",
+    "paths": {
+      "/": {
+        "get": {
+          "summary": "Home endpoint",
+          "description": "Returns a simple 'ok' message",
+          "responses": {
+            "200": {
+              "description": "Successful response",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/users": {
+        "get": {
+          "summary": "Get all users",
+          "description": "Fetch a list of all users in the system",
+          "responses": {
+            "200": {
+              "description": "List of users",
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/User"
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        },
+        "post": {
+          "summary": "Create a new user",
+          "description": "Create a new user in the system",
+          "parameters": [
+            {
+              "in": "body",
+              "name": "user",
+              "description": "User object to create",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/User"
+              }
+            }
+          ],
+          "responses": {
+            "201": {
+              "description": "User successfully created",
+              "schema": {
+                "$ref": "#/definitions/User"
+              }
+            },
+            "400": {
+              "description": "Invalid input"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/tasks": {
+        "post": {
+          "summary": "Create a new task",
+          "description": "Create a new task in the system (Admin only)",
+          "parameters": [
+            {
+              "in": "body",
+              "name": "task",
+              "description": "Task object to create",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/Task"
+              }
+            }
+          ],
+          "responses": {
+            "201": {
+              "description": "Task successfully created",
+              "schema": {
+                "$ref": "#/definitions/Task"
+              }
+            },
+            "400": {
+              "description": "Invalid input"
+            },
+            "403": {
+              "description": "Forbidden (Admin role required)"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/tasks/update-status/{id}": {
+        "patch": {
+          "summary": "Update task status",
+          "description": "Update the status of a task (User only)",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "required": true,
+              "type": "string",
+              "description": "Task ID"
+            },
+            {
+              "in": "body",
+              "name": "status",
+              "description": "New status of the task",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/TaskStatus"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Task status successfully updated",
+              "schema": {
+                "$ref": "#/definitions/Task"
+              }
+            },
+            "400": {
+              "description": "Invalid input"
+            },
+            "404": {
+              "description": "Task not found"
+            },
+            "403": {
+              "description": "Forbidden (User role required)"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/users/{id}": {
+        "get": {
+          "summary": "Get a user by ID",
+          "description": "Fetch a user by their ID",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "required": true,
+              "type": "string",
+              "description": "User ID"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "User found",
+              "schema": {
+                "$ref": "#/definitions/User"
+              }
+            },
+            "404": {
+              "description": "User not found"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        },
+        "put": {
+          "summary": "Update a user by ID",
+          "description": "Update the details of an existing user",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "required": true,
+              "type": "string",
+              "description": "User ID"
+            },
+            {
+              "in": "body",
+              "name": "user",
+              "description": "User object with updated details",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/User"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "User successfully updated",
+              "schema": {
+                "$ref": "#/definitions/User"
+              }
+            },
+            "400": {
+              "description": "Invalid input"
+            },
+            "404": {
+              "description": "User not found"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        },
+        "patch": {
+          "summary": "Edit a user by ID",
+          "description": "Partially update the details of an existing user",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "required": true,
+              "type": "string",
+              "description": "User ID"
+            },
+            {
+              "in": "body",
+              "name": "user",
+              "description": "User object with partial updates",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/User"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "User successfully edited",
+              "schema": {
+                "$ref": "#/definitions/User"
+              }
+            },
+            "400": {
+              "description": "Invalid input"
+            },
+            "404": {
+              "description": "User not found"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        },
+        "delete": {
+          "summary": "Delete a user by ID",
+          "description": "Delete a user from the system by their ID",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "required": true,
+              "type": "string",
+              "description": "User ID"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "User successfully deleted"
+            },
+            "404": {
+              "description": "User not found"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/users/login": {
+        "post": {
+          "summary": "Login user",
+          "description": "Authenticate and log in a user",
+          "parameters": [
+            {
+              "in": "body",
+              "name": "user",
+              "description": "Login credentials",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/LoginCredentials"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "User successfully logged in",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "token": {
+                    "type": "string",
+                    "description": "Authentication token"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid credentials"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      }
+    },
+    "definitions": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "12345"
+          },
+          "firstName": {
+            "type": "string",
+            "example": "John"
+          },
+          "lastName": {
+            "type": "string",
+            "example": "Doe"
+          },
+          "email": {
+            "type": "string",
+            "example": "john.doe@example.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "password123"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2023-01-01T12:00:00Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2023-01-02T12:00:00Z"
+          }
+        }
+      },
+      "LoginCredentials": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "john.doe@example.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "password123"
+          }
+        }
+      },
+      "Task": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "task-123"
+          },
+          "title": {
+            "type": "string",
+            "example": "Complete task"
+          },
+          "description": {
+            "type": "string",
+            "example": "Description of the task"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["pending", "in-progress", "completed"],
+            "example": "pending"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2023-01-01T12:00:00Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2023-01-02T12:00:00Z"
+          }
+        }
+      },
+      "TaskStatus": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": ["pending", "in-progress", "completed"],
+            "example": "completed"
+          }
+        }
+      }
+    }
+  }
+  

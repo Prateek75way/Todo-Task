@@ -9,10 +9,17 @@ import { loadConfig } from "./app/common/helper/config.hepler";
 import { type IUser } from "./app/user/user.dto";
 import errorHandler from "./app/common/middleware/error-handler.middleware";
 import routes from "./app/routes";
+import swaggerUi from 'swagger-ui-express';
+import path from 'path';
+import fs from 'fs';
 
+ 
 loadConfig();
+// Load Swagger JSON from the file system
+const swaggerJson = fs.readFileSync(path.join(process.cwd(), 'swagger', 'options.json'), 'utf-8');
+const swaggerSpec = JSON.parse(swaggerJson);
 
-declare global {
+declare global { 
   namespace Express {
     interface User extends Omit<IUser, "password"> { }
     interface Request {
@@ -21,10 +28,10 @@ declare global {
   }
 }
 
-const port = 7000;
+const port = 8000;
 
 const app: Express = express();
-
+ 
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -36,9 +43,14 @@ const initApp = async (): Promise<void> => {
   // init mongodb
   await initDB();
 
-  // passport init
+  // passport init 
   //initPassport();
-
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec)); // Pass swaggerSpec instead of null
+  
+  
+  // Static file serving for the JSON file
+  app.use('/swagger', express.static(path.join(process.cwd(), 'swagger')));
+  const swaggerJsonPath = path.join(process.cwd(), 'swagger', 'options.json');
   // set base path to /api
   app.use("/api", routes);
 
@@ -46,12 +58,10 @@ const initApp = async (): Promise<void> => {
     res.send({ status: "ok" });
   });
 
-
-
   // error handler
   app.use(errorHandler);
   http.createServer(app).listen(port, () => {
-    console.log("Server is runnuing on port", port); 
+    console.log("Server is running on port", port); 
   });
 };
 

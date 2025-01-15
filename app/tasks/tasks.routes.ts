@@ -12,6 +12,7 @@ router
        // .get("/", userController.getAllUser)
         
         .post("/", roleAuth(["ADMIN"]),tasksValidator.createTask, catchError,taskController.createTask)
+        .patch("/update-status/:id",roleAuth(["USER"]), catchError, taskController.changeStatus)
         // .put("/:id", userValidator.updateUser, catchError, userController.updateUser)
         // .patch("/:id", userValidator.editUser, catchError, userController.editUser)
         // .post("/login", userValidator.loginUser, catchError, userController.loginUser)
